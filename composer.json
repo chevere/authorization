@@ -25,6 +25,9 @@
         "symplify/easy-coding-standard": "^13.2"
     },
     "autoload": {
+        "files": [
+            "src/functions.php"
+        ],
         "psr-4": {
             "Chevere\\Authorization\\": "src/"
         }

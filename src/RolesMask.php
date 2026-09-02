@@ -72,18 +72,18 @@ final class RolesMask extends Action implements StringMappedInterface
         assertArguments('bitmask');
         $error = [];
         if (($bitmask & $this->roles->mask()) !== $bitmask) {
-            $error[] = sprintf('Bitmask "%d" contains undefined role bits', $bitmask);
+            $error[] = sprintf('Bitmask `%d` contains undefined role bits', $bitmask);
         }
         foreach ($permission as $item) {
             if (! $this->map->has($item->value())) {
-                $error[] = sprintf('Permission "%s" not granted', $item->value());
+                $error[] = sprintf('Permission `%s` not granted', $item->value());
 
                 continue;
             }
             $allowMask = $this->map->get($item->value());
             if (($allowMask & $bitmask) === 0) {
                 $error[] = sprintf(
-                    'Permission "%s" not granted (mask: %d, required: %d)',
+                    'Permission `%s` not granted (mask: `%d`, required: `%d`)',
                     $item->value(),
                     $bitmask,
                     $allowMask

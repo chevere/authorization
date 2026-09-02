@@ -113,8 +113,8 @@ final class RolesMaskTest extends TestCase
         $this->expectException(PermissionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Permission "app.create" not granted
-            Permission "user.create" not granted
+            Permission `app.create` not granted
+            Permission `user.create` not granted
             PLAIN
         );
         $roles = new Roles(new Role(1, 'user'));
@@ -122,12 +122,12 @@ final class RolesMaskTest extends TestCase
         $rolesMask->__invoke(1, AppPermission::Create, UserPermission::Create);
     }
 
-    public function testInvalidMask(): void
+    public function testUndefinedBits(): void
     {
         $this->expectException(PermissionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Bitmask "3" contains undefined role bits
+            Bitmask `3` contains undefined role bits
             PLAIN
         );
         $roles = new Roles(
@@ -135,6 +135,7 @@ final class RolesMaskTest extends TestCase
             new Role(4, 'staff', UserPermission::Create)
         );
         $rolesMask = new RolesMask($roles);
+        $this->assertFalse($rolesMask->contains(2, AppPermission::Create));
         $rolesMask->__invoke(3, AppPermission::Create);
     }
 
@@ -143,8 +144,8 @@ final class RolesMaskTest extends TestCase
         $this->expectException(PermissionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Permission "app.create" not granted (mask: 4, required: 3)
-            Permission "user.ban" not granted
+            Permission `app.create` not granted (mask: `4`, required: `3`)
+            Permission `user.ban` not granted
             PLAIN
         );
         $roles = new Roles(

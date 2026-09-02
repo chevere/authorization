@@ -19,7 +19,6 @@ use Chevere\Authorization\Interfaces\RoleInterface;
 use Chevere\Authorization\Interfaces\RolesInterface;
 use Chevere\Caller\Caller;
 use Chevere\Caller\Interfaces\CallerInterface;
-use InvalidArgumentException;
 
 final class Role implements RoleInterface
 {
@@ -43,13 +42,7 @@ final class Role implements RoleInterface
         private string $name,
         PermissionInterface|RoleInterface ...$permit,
     ) {
-        if (! ($bit > 0 && ($bit & ($bit - 1)) === 0)) {
-            throw new InvalidArgumentException(
-                <<<PLAIN
-                Argument bit value provided is not a power of two
-                PLAIN
-            );
-        }
+        assertIsPowerOfTwo($bit);
         /**
          * @infection-ignore-all
          */

@@ -53,7 +53,7 @@ final class RoleTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Argument bit value provided is not a power of two
+            The number {$int} is not a power of two
             PLAIN
         );
         new Role($int, 'invalid');
