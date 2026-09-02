@@ -1,6 +1,6 @@
 {
     "name": "chevere/authorization",
-    "description": "A chevere authorization package",
+    "description": "Bitwise driven role authorization (grants) system",
     "homepage": "https://chevere.org",
     "type": "library",
     "license": "Apache-2.0",
