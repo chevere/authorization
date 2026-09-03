@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Authorization\Permissions;
-use Chevere\Tests\src\AppPermission;
+use Chevere\Tests\src\PostPermission;
 use Chevere\Tests\src\UserPermission;
 use LogicException;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,7 @@ final class PermissionsTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Missing permission(s): app.create, app.delete
+            Missing permission(s): post.create, post.delete
             PLAIN
         );
         $permissions = new Permissions();
@@ -34,18 +34,18 @@ final class PermissionsTest extends TestCase
         $permissions->contains();
         $permissions->assert();
         $this->assertFalse(
-            $permissions->contains(AppPermission::Create)
+            $permissions->contains(PostPermission::Create)
         );
         $permissions->assert(
-            AppPermission::Create,
-            AppPermission::Delete
+            PostPermission::Create,
+            PostPermission::Delete
         );
     }
 
     public function testPermissions(): void
     {
         $arguments = [
-            AppPermission::Create,
+            PostPermission::Create,
             UserPermission::Create,
         ];
         $permissions = new Permissions(...$arguments);
@@ -58,32 +58,32 @@ final class PermissionsTest extends TestCase
             $permissions->contains(...$arguments)
         );
         $this->assertFalse(
-            $permissions->contains(AppPermission::Delete)
+            $permissions->contains(PostPermission::Delete)
         );
         $this->assertFalse(
-            $permissions->contains(UserPermission::Create, AppPermission::Delete)
+            $permissions->contains(UserPermission::Create, PostPermission::Delete)
         );
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Missing permission(s): app.delete
+            Missing permission(s): post.delete
             PLAIN
         );
-        $permissions->assert(UserPermission::Create, AppPermission::Delete);
+        $permissions->assert(UserPermission::Create, PostPermission::Delete);
     }
 
     public function testWith(): void
     {
         $arguments = [
-            AppPermission::Create,
-            AppPermission::Delete,
+            PostPermission::Create,
+            PostPermission::Delete,
             UserPermission::Create,
         ];
         $foo = new Permissions(
-            AppPermission::Create,
+            PostPermission::Create,
         );
         $bar = new Permissions(
-            AppPermission::Delete,
+            PostPermission::Delete,
         );
         $fooWith = $foo->withMerge($bar);
         $this->assertNotSame($foo, $fooWith);

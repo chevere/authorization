@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of Chevereto Cloud.
+ * This file is part of Chevere.
  *
- * (c) Rodolfo Berrios <rodolfo@chevereto.com>
+ * (c) Rodolfo Berrios <rodolfo@chevere.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,16 +34,16 @@ interface RoleInterface
     public function inherits(): RolesInterface;
 
     /**
+     * The mask value for this role.
+     * Must be the role bit + the sum of all the bits from inherited roles.
+     */
+    public function mask(): int;
+
+    /**
      * The permissions exclusively granted by this role.
      * This doesn't include the permissions from the inherited roles.
      */
     public function grants(): PermissionsInterface;
-
-    /**
-     * The mask value for this role.
-     * Must be the sum of all the bits from the inherited roles.
-     */
-    public function mask(): int;
 
     /**
      * The permissions that this role has.

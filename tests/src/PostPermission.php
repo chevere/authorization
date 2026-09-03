@@ -16,10 +16,12 @@ namespace Chevere\Tests\src;
 use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Traits\PermissionTrait;
 
-enum AppPermission: string implements PermissionInterface
+enum PostPermission: string implements PermissionInterface
 {
     use PermissionTrait;
 
-    case Create = 'app.create';
-    case Delete = 'app.delete';
+    case Create = 'post.create';
+    case Delete = 'post.delete';
+    case Edit = 'post.edit';
+    case View = 'post.view';
 }

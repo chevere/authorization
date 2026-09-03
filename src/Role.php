@@ -63,7 +63,7 @@ final class Role implements RoleInterface
         $this->permissions = $this->grants;
         $this->inherits = new Roles(...$inherits);
         foreach ($this->inherits as $parent) {
-            $this->mask += $parent->bit();
+            $this->mask |= $parent->bit();
             $this->permissions = $this->permissions
                 ->withMerge($parent->permissions());
         }

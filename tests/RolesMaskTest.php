@@ -17,7 +17,7 @@ use Chevere\Authorization\PermissionException;
 use Chevere\Authorization\Role;
 use Chevere\Authorization\Roles;
 use Chevere\Authorization\RolesMask;
-use Chevere\Tests\src\AppPermission;
+use Chevere\Tests\src\PostPermission;
 use Chevere\Tests\src\UserPermission;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -39,15 +39,15 @@ final class RolesMaskTest extends TestCase
     public function testAssert(): void
     {
         $roles = new Roles(
-            new Role(1, 'user', AppPermission::Create),
-            new Role(2, 'admin', AppPermission::Create, UserPermission::Create, UserPermission::Ban),
+            new Role(1, 'user', PostPermission::Create),
+            new Role(2, 'admin', PostPermission::Create, UserPermission::Create, UserPermission::Ban),
             new Role(4, 'staff', UserPermission::Create)
         );
         $rolesMask = new RolesMask($roles);
         $this->assertSame($roles, $rolesMask->roles());
         $this->assertSame(
             [
-                AppPermission::Create->value => 3,
+                PostPermission::Create->value => 3,
                 UserPermission::Create->value => 6,
                 UserPermission::Ban->value => 2,
             ],
@@ -65,8 +65,8 @@ final class RolesMaskTest extends TestCase
     public function testNotContains(int $mask, array $arguments): void
     {
         $roles = new Roles(
-            new Role(1, 'user', AppPermission::Create),
-            new Role(2, 'admin', AppPermission::Create, UserPermission::Create, UserPermission::Ban),
+            new Role(1, 'user', PostPermission::Create),
+            new Role(2, 'admin', PostPermission::Create, UserPermission::Create, UserPermission::Ban),
             new Role(4, 'staff', UserPermission::Ban, UserPermission::Delete),
         );
         $rolesMask = new RolesMask($roles);
@@ -87,7 +87,7 @@ final class RolesMaskTest extends TestCase
             [
                 5,
                 [
-                    AppPermission::Create,
+                    PostPermission::Create,
                     UserPermission::Create,
                 ],
             ],
@@ -95,14 +95,14 @@ final class RolesMaskTest extends TestCase
                 6,
                 [
                     UserPermission::Create,
-                    AppPermission::Delete,
+                    PostPermission::Delete,
                 ],
             ],
             [
                 7,
                 [
                     UserPermission::Create,
-                    AppPermission::Delete,
+                    PostPermission::Delete,
                 ],
             ],
         ];
@@ -113,13 +113,13 @@ final class RolesMaskTest extends TestCase
         $this->expectException(PermissionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Permission `app.create` not granted
+            Permission `post.create` not granted
             Permission `user.create` not granted
             PLAIN
         );
         $roles = new Roles(new Role(1, 'user'));
         $rolesMask = new RolesMask($roles);
-        $rolesMask->__invoke(1, AppPermission::Create, UserPermission::Create);
+        $rolesMask->__invoke(1, PostPermission::Create, UserPermission::Create);
     }
 
     public function testUndefinedBits(): void
@@ -131,12 +131,12 @@ final class RolesMaskTest extends TestCase
             PLAIN
         );
         $roles = new Roles(
-            new Role(1, 'user', AppPermission::Create),
+            new Role(1, 'user', PostPermission::Create),
             new Role(4, 'staff', UserPermission::Create)
         );
         $rolesMask = new RolesMask($roles);
-        $this->assertFalse($rolesMask->contains(2, AppPermission::Create));
-        $rolesMask->__invoke(3, AppPermission::Create);
+        $this->assertFalse($rolesMask->contains(2, PostPermission::Create));
+        $rolesMask->__invoke(3, PostPermission::Create);
     }
 
     public function testMissingGrants(): void
@@ -144,16 +144,16 @@ final class RolesMaskTest extends TestCase
         $this->expectException(PermissionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Permission `app.create` not granted (mask: `4`, required: `3`)
+            Permission `post.create` not granted (mask: `4`, required: `3`)
             Permission `user.ban` not granted
             PLAIN
         );
         $roles = new Roles(
-            new Role(1, 'user', AppPermission::Create),
-            new Role(2, 'admin', AppPermission::Create, UserPermission::Create),
+            new Role(1, 'user', PostPermission::Create),
+            new Role(2, 'admin', PostPermission::Create, UserPermission::Create),
             new Role(4, 'staff', UserPermission::Create),
         );
         $rolesMask = new RolesMask($roles);
-        $rolesMask->__invoke(4, AppPermission::Create, UserPermission::Ban);
+        $rolesMask->__invoke(4, PostPermission::Create, UserPermission::Ban);
     }
 }

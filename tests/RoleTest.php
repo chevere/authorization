@@ -29,6 +29,7 @@ final class RoleTest extends TestCase
     {
         $role = new Role($power, 'valid');
         $this->assertSame($power, $role->bit());
+        $this->assertSame($power, $role->mask());
     }
 
     public static function dataProviderPowersOfTwo(): array
@@ -102,7 +103,7 @@ final class RoleTest extends TestCase
         $user = new Role(1, 'user', UserPermission::Create);
         $staff = new Role(4, 'staff', UserPermission::Ban);
         $admin = new Role(2, 'admin', $user, $staff);
-        $this->assertSame(1 + 2 + 4, $admin->mask());
+        $this->assertSame(1 | 2 | 4, $admin->mask());
         $this->assertTrue($admin->permissions()->contains(UserPermission::Create));
         $this->assertTrue($admin->permissions()->contains(UserPermission::Ban));
     }
