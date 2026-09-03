@@ -77,7 +77,7 @@ final class Roles implements RolesInterface
     public function has(int ...$bit): bool
     {
         foreach ($bit as $value) {
-            if (($this->mask & $value) === 0) {
+            if ($value <= 0 || ($this->mask & $value) !== $value) {
                 return false;
             }
         }

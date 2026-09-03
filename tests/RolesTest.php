@@ -70,6 +70,13 @@ final class RolesTest extends TestCase
         $this->assertFalse($roles->has(3, 2, 1, 0));
     }
 
+    public function testHasCompositeBitRequiresAllBits(): void
+    {
+        $roles = new Roles(new Role(1, 'user'));
+
+        $this->assertFalse($roles->has(1 | 2));
+    }
+
     public function testFind(): void
     {
         $user = new Role(1, 'user');
