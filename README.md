@@ -286,7 +286,7 @@ Role bits are stored in a single integer, which caps this system at **63 combina
 
 ## Documentation
 
-Documentation is available at [chevere.org](https://chevere.org/packages/authorization).
+Documentation is available at [chevere.org/packages/authorization](https://chevere.org/packages/authorization).
 
 ## License
 
