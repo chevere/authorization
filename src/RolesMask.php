@@ -16,17 +16,13 @@ namespace Chevere\Authorization;
 use Chevere\Action\Action;
 use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Interfaces\RolesInterface;
-use Chevere\DataStructure\Interfaces\StringMappedInterface;
+use Chevere\Authorization\Interfaces\RolesMaskInterface;
 use Chevere\DataStructure\Map;
 use Chevere\DataStructure\Traits\MapTrait;
 use Chevere\Parameter\Attributes\_int;
 use function Chevere\Parameter\Attributes\assertArguments;
-use function Chevere\Parameter\int;
 
-/**
- * @implements StringMappedInterface<int>
- */
-final class RolesMask extends Action implements StringMappedInterface
+final class RolesMask extends Action implements RolesMaskInterface
 {
     /**
      * @template-use MapTrait<int>
@@ -59,13 +55,8 @@ final class RolesMask extends Action implements StringMappedInterface
         return $this->roles;
     }
 
-    /**
-     * Asserts that the given mask contains the given permission(s).
-     *
-     * @throws PermissionException
-     */
     public function __invoke(
-        #[_int(min: 1)]
+        #[_int(min: 0)]
         int $bitmask,
         PermissionInterface ...$permission
     ): void {
@@ -92,27 +83,18 @@ final class RolesMask extends Action implements StringMappedInterface
         }
 
         if ($error !== []) {
-            throw new PermissionException(
-                implode(PHP_EOL, $error)
-            );
+            throw new PermissionException(implode(PHP_EOL, $error));
         }
     }
 
-    /**
-     * Returns true if the given mask contains the given permission(s).
-     */
     public function contains(
         int $bitmask,
         PermissionInterface ...$permission
     ): bool {
-        foreach ($permission as $item) {
-            if (! $this->map->has($item->value())) {
-                return false;
-            }
-            $permMask = $this->map->get($item->value());
-            if (($permMask & $bitmask) === 0) {
-                return false;
-            }
+        try {
+            $this->__invoke($bitmask, ...$permission);
+        } catch (PermissionException) {
+            return false;
         }
 
         return true;

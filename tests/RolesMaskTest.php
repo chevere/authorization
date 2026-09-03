@@ -30,10 +30,10 @@ final class RolesMaskTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            [bitmask]: Argument value provided `0` is less than `1`
+            [bitmask]: Argument value provided `-1` is less than `0`
             PLAIN
         );
-        (new RolesMask(new Roles()))->__invoke(0);
+        (new RolesMask(new Roles()))->__invoke(-1);
     }
 
     public function testAssert(): void

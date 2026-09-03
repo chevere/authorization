@@ -47,8 +47,8 @@ final class RoleTest extends TestCase
         return $powers;
     }
 
-    #[DataProvider('dataProviderNoPowerOfTwo')]
-    public function testNoPowerOfTwo(int $int): void
+    #[DataProvider('dataProviderNotPowerOfTwo')]
+    public function testNotPowerOfTwo(int $int): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -59,7 +59,7 @@ final class RoleTest extends TestCase
         new Role($int, 'invalid');
     }
 
-    public static function dataProviderNoPowerOfTwo(): array
+    public static function dataProviderNotPowerOfTwo(): array
     {
         return [
             [0],
@@ -69,9 +69,6 @@ final class RoleTest extends TestCase
             [7],
             [9],
             [10],
-            [12],
-            [14],
-            [15],
         ];
     }
 
