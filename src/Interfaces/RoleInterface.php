@@ -18,41 +18,45 @@ use Chevere\Caller\Interfaces\CallerInterface;
 interface RoleInterface
 {
     /**
-     * The role name (unique).
+     * @return string The role name.
      */
     public function name(): string;
 
     /**
      * The bit value for this role.
-     * Must be a power of 2.
+     *
+     * @return int Must be a power of 2.
      */
     public function bit(): int;
 
     /**
-     * The roles that this role inherits.
+     * @return RolesInterface The roles that this role inherits.
      */
     public function inherits(): RolesInterface;
 
     /**
-     * The mask value for this role.
      * Must be the role bit + the sum of all the bits from inherited roles.
+     *
+     * @return int The mask value for this role.
      */
     public function mask(): int;
 
     /**
-     * The permissions exclusively granted by this role.
      * This doesn't include the permissions from the inherited roles.
+     *
+     * @return PermissionsInterface The permissions exclusively granted by this role.
      */
     public function grants(): PermissionsInterface;
 
     /**
-     * The permissions that this role has.
      * This includes the permissions from the inherited roles.
+     *
+     * @return PermissionsInterface The permissions that this role has.
      */
     public function permissions(): PermissionsInterface;
 
     /**
-     * The caller for this role.
+     * @return CallerInterface The caller for this role.
      */
     public function caller(): CallerInterface;
 }

@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of Chevereto Cloud.
+ * This file is part of Chevere.
  *
- * (c) Rodolfo Berrios <rodolfo@chevereto.com>
+ * (c) Rodolfo Berrios <rodolfo@chevere.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,8 +28,7 @@ interface RolesInterface extends StringMappedInterface
     public function mask(): int;
 
     /**
-     * @return Traversable<string, RoleInterface>
-     * @phpstan-return Iterator<string, RoleInterface>
+     * @return Iterator<string, RoleInterface>
      */
     public function getIterator(): Iterator;
 
