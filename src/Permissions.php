@@ -84,8 +84,7 @@ final class Permissions implements PermissionsInterface
     public function withMerge(PermissionsInterface $permissions): self
     {
         $new = clone $this;
-        // @phpstan-ignore-next-line
-        $new->pushPermission(...$permissions->items->toArray());
+        $new->pushPermission(...$permissions);
 
         return $new;
     }

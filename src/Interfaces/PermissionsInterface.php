@@ -16,7 +16,6 @@ namespace Chevere\Authorization\Interfaces;
 use Countable;
 use Iterator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * Describes the component in charge of collecting PermissionInterface objects.
@@ -38,8 +37,7 @@ interface PermissionsInterface extends IteratorAggregate, Countable
     public function withMerge(self $permissions): self;
 
     /**
-     * @return Traversable<PermissionInterface>
-     * @phpstan-return Iterator<PermissionInterface>
+     * @return Iterator<PermissionInterface>
      */
     public function getIterator(): Iterator;
 }
