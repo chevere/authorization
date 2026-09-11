@@ -31,7 +31,7 @@ final class PermissionsTest extends TestCase
         );
         $permissions = new Permissions();
         $this->assertSame([], iterator_to_array($permissions));
-        $permissions->contains();
+        $this->assertTrue($permissions->contains());
         $permissions->assert();
         $this->assertFalse(
             $permissions->contains(PostPermission::Create)

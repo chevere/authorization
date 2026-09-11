@@ -34,7 +34,7 @@ interface RolesInterface extends StringMappedInterface
 
     public function find(string $name): RoleInterface;
 
-    public function has(int ...$bit): bool;
+    public function has(int ...$mask): bool;
 
     public function get(int $bit): RoleInterface;
 

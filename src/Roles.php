@@ -74,9 +74,9 @@ final class Roles implements RolesInterface
         return $this->map->get($this->names->get($name));
     }
 
-    public function has(int ...$bit): bool
+    public function has(int ...$mask): bool
     {
-        foreach ($bit as $value) {
+        foreach ($mask as $value) {
             if ($value <= 0 || ($this->mask & $value) !== $value) {
                 return false;
             }
