@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\src;
 
-enum EnumPermission: string
+enum EnumIntPermission: int
 {
-    case Create = 'enum.create';
-    case Ban = 'enum.ban';
-    case Delete = 'enum.delete';
+    case Create = 1;
+    case Ban = 2;
+    case Delete = 3;
 }

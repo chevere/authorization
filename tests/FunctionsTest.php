@@ -15,7 +15,8 @@ namespace Chevere\Tests;
 
 use BackedEnum;
 use Chevere\Authorization\Interfaces\PermissionInterface;
-use Chevere\Tests\src\EnumPermission;
+use Chevere\Tests\src\EnumIntPermission;
+use Chevere\Tests\src\IntPermission;
 use Chevere\Tests\src\UserPermission;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -86,7 +87,8 @@ final class FunctionsTest extends TestCase
         return [
             ['value', 'value'],
             ['user.create', UserPermission::Create],
-            ['enum.create', EnumPermission::Create],
+            ['1', EnumIntPermission::Create],
+            ['4', IntPermission::Create],
         ];
     }
 }
