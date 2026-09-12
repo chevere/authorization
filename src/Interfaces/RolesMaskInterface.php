@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization\Interfaces;
 
+use BackedEnum;
 use Chevere\Action\Interfaces\ActionInterface;
 use Chevere\Authorization\PermissionException;
 use Chevere\DataStructure\Interfaces\StringMappedInterface;
@@ -36,7 +37,7 @@ interface RolesMaskInterface extends ActionInterface, StringMappedInterface
      */
     public function __invoke(
         int $bitmask,
-        PermissionInterface ...$permission
+        string|PermissionInterface|BackedEnum ...$permission
     ): void;
 
     /**
@@ -44,6 +45,6 @@ interface RolesMaskInterface extends ActionInterface, StringMappedInterface
      */
     public function contains(
         int $bitmask,
-        PermissionInterface ...$permission
+        string|PermissionInterface|BackedEnum ...$permission
     ): bool;
 }

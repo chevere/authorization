@@ -57,6 +57,12 @@ final class PermissionsTest extends TestCase
         $this->assertTrue(
             $permissions->contains(...$arguments)
         );
+        foreach ($arguments as &$argument) {
+            $argument = $argument->value();
+        }
+        $this->assertTrue(
+            $permissions->contains(...$arguments)
+        );
         $this->assertFalse(
             $permissions->contains(PostPermission::Delete)
         );

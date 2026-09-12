@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization;
 
+use BackedEnum;
 use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Interfaces\PermissionsInterface;
 use Chevere\Authorization\Interfaces\RoleInterface;
@@ -35,12 +36,12 @@ final class Role implements RoleInterface
     /**
      * @param int $bit The bit value for this role. Must be a power of 2.
      * @param string $name The role name (unique).
-     * @param PermissionInterface|RoleInterface ...$permit The permissions and roles that this role has.
+     * @param string|PermissionInterface|BackedEnum|RoleInterface ...$permit The permissions and roles that this role has.
      */
     final public function __construct(
         private int $bit,
         private string $name,
-        PermissionInterface|RoleInterface ...$permit,
+        string|PermissionInterface|BackedEnum|RoleInterface ...$permit,
     ) {
         assertIsPowerOfTwo($bit);
         /**
@@ -52,12 +53,12 @@ final class Role implements RoleInterface
         $inherits = [];
         $grants = [];
         foreach ($permit as $item) {
-            if ($item instanceof PermissionInterface) {
-                $grants[] = $item;
+            if ($item instanceof RoleInterface) {
+                $inherits[] = $item;
 
                 continue;
             }
-            $inherits[] = $item;
+            $grants[] = $item;
         }
         $this->grants = new Permissions(...$grants);
         $this->permissions = $this->grants;

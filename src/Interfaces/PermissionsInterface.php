@@ -13,20 +13,21 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization\Interfaces;
 
+use BackedEnum;
 use Countable;
 use Iterator;
 use IteratorAggregate;
 
 /**
- * Describes the component in charge of collecting PermissionInterface objects.
+ * Describes the component in charge of collecting string|PermissionInterface|BackedEnum members.
  *
- * @extends IteratorAggregate<PermissionInterface>
+ * @extends IteratorAggregate<string|PermissionInterface|BackedEnum>
  */
 interface PermissionsInterface extends IteratorAggregate, Countable
 {
-    public function contains(PermissionInterface ...$permission): bool;
+    public function contains(string|PermissionInterface|BackedEnum ...$permission): bool;
 
-    public function assert(PermissionInterface ...$permission): void;
+    public function assert(string|PermissionInterface|BackedEnum ...$permission): void;
 
     /**
      * Return an instance with the specified $permissions merged.
@@ -37,7 +38,7 @@ interface PermissionsInterface extends IteratorAggregate, Countable
     public function withMerge(self $permissions): self;
 
     /**
-     * @return Iterator<PermissionInterface>
+     * @return Iterator<string|PermissionInterface|BackedEnum>
      */
     public function getIterator(): Iterator;
 }

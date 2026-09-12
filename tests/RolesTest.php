@@ -32,11 +32,11 @@ final class RolesTest extends TestCase
     #[DataProvider('dataProviderOverflow')]
     public function testOverflow(int $bit, string $role, string $error): void
     {
-        $user = new Role(1, 'user');
+        $userRole = new Role(1, 'user');
         $role = new Role($bit, $role);
         $this->expectException(OverflowException::class);
         $this->expectExceptionMessage($error);
-        new Roles($user, $role);
+        new Roles($userRole, $role);
     }
 
     public static function dataProviderOverflow(): array
@@ -49,25 +49,41 @@ final class RolesTest extends TestCase
 
     public function testConstruct(): void
     {
-        $user = new Role(1, 'user');
-        $admin = new Role(2, 'admin');
-        $roles = new Roles($user, $admin);
+        $userRole = new Role(1, 'user');
+        $adminRole = new Role(2, 'admin');
+        $roles = new Roles($userRole, $adminRole);
         $this->assertCount(2, $roles);
         $this->assertSame(
             [1, 2],
             $roles->keys()
         );
-        $this->assertSame($user, $roles->get(1));
-        $this->assertSame($admin, $roles->get(2));
+        $this->assertSame($userRole, $roles->get(1));
+        $this->assertSame($adminRole, $roles->get(2));
         $this->assertTrue(
-            $roles(
-                ...$user->grants(),
-                ...$admin->grants()
-            )
+            $roles->permissions()
+                ->contains(
+                    ...$userRole->grants(),
+                    ...$adminRole->grants()
+                )
         );
         $this->assertSame(3, $roles->mask());
         $this->assertTrue($roles->has(3, 2, 1));
         $this->assertFalse($roles->has(3, 2, 1, 0));
+    }
+
+    public function testPermissionsContains(): void
+    {
+        $userRole = new Role(1, 'user', 'post.draft');
+        $adminRole = new Role(2, 'admin', 'post.publish');
+        $roles = new Roles($userRole, $adminRole);
+        $this->assertTrue(
+            $roles->permissions()
+                ->contains('post.draft', 'post.publish')
+        );
+        $this->assertFalse(
+            $roles->permissions()
+                ->contains('post.draft', 'post.publish', 'post.delete')
+        );
     }
 
     public function testHasCompositeBitRequiresAllBits(): void
@@ -79,11 +95,11 @@ final class RolesTest extends TestCase
 
     public function testFind(): void
     {
-        $user = new Role(1, 'user');
-        $admin = new Role(2, 'admin');
-        $roles = new Roles($user, $admin);
-        $this->assertSame($user, $roles->find('user'));
-        $this->assertSame($admin, $roles->find('admin'));
+        $userRole = new Role(1, 'user');
+        $adminRole = new Role(2, 'admin');
+        $roles = new Roles($userRole, $adminRole);
+        $this->assertSame($userRole, $roles->find('user'));
+        $this->assertSame($adminRole, $roles->find('admin'));
     }
 
     public function testFindNotFound(): void
@@ -96,22 +112,23 @@ final class RolesTest extends TestCase
 
     public function testForMask(): void
     {
-        $user = new Role(1, 'user');
-        $admin = new Role(2, 'admin');
-        $staff = new Role(4, 'staff');
-        $roles = new Roles($admin, $staff);
-        $mask = $admin->bit() + $staff->bit();
+        $userRole = new Role(1, 'user');
+        $adminRole = new Role(2, 'admin');
+        $staffRole = new Role(4, 'staff');
+        $roles = new Roles($adminRole, $staffRole);
+        $mask = $adminRole->bit() + $staffRole->bit();
         $this->assertSame(
             [2, 4],
             $roles->forMask($mask)
                 ->keys()
         );
         $this->assertTrue(
-            $roles(
-                ...$user->grants(),
-                ...$admin->grants(),
-                ...$staff->grants()
-            )
+            $roles->permissions()
+                ->contains(
+                    ...$userRole->grants(),
+                    ...$adminRole->grants(),
+                    ...$staffRole->grants()
+                )
         );
     }
 }

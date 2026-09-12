@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization;
 
-use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Interfaces\PermissionsInterface;
 use Chevere\Authorization\Interfaces\RoleInterface;
 use Chevere\Authorization\Interfaces\RolesInterface;
@@ -51,11 +50,6 @@ final class Roles implements RolesInterface
         foreach ($role as $item) {
             $this->put($item);
         }
-    }
-
-    public function __invoke(PermissionInterface ...$permission): bool
-    {
-        return $this->permissions->contains(...$permission);
     }
 
     public function mask(): int

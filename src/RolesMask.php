@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization;
 
+use BackedEnum;
 use Chevere\Action\Action;
 use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Interfaces\RolesInterface;
@@ -40,12 +41,13 @@ final class RolesMask extends Action implements RolesMaskInterface
         $this->map = new Map();
         foreach ($this->roles as $role) {
             foreach ($role->permissions() as $permission) {
+                $value = getPermission($permission);
                 $bit = $role->bit();
-                if ($this->map->has($permission->value())) {
+                if ($this->map->has($value)) {
                     /** @var int $bit */
-                    $bit += $this->map->get($permission->value());
+                    $bit += $this->map->get($value);
                 }
-                $this->map = $this->map->withPut($permission->value(), $bit);
+                $this->map = $this->map->withPut($value, $bit);
             }
         }
     }
@@ -58,7 +60,7 @@ final class RolesMask extends Action implements RolesMaskInterface
     public function __invoke(
         #[_int(min: 0)]
         int $bitmask,
-        PermissionInterface ...$permission
+        string|PermissionInterface|BackedEnum ...$permission
     ): void {
         assertArguments('bitmask');
         $error = [];
@@ -66,16 +68,17 @@ final class RolesMask extends Action implements RolesMaskInterface
             $error[] = sprintf('Bitmask `%d` contains undefined role bits', $bitmask);
         }
         foreach ($permission as $item) {
-            if (! $this->map->has($item->value())) {
-                $error[] = sprintf('Permission `%s` not granted', $item->value());
+            $value = getPermission($item);
+            if (! $this->map->has($value)) {
+                $error[] = sprintf('Permission `%s` not granted', $value);
 
                 continue;
             }
-            $allowMask = $this->map->get($item->value());
+            $allowMask = $this->map->get($value);
             if (($allowMask & $bitmask) === 0) {
                 $error[] = sprintf(
                     'Permission `%s` not granted (mask: `%d`, required: `%d`)',
-                    $item->value(),
+                    $value,
                     $bitmask,
                     $allowMask
                 );
@@ -89,7 +92,7 @@ final class RolesMask extends Action implements RolesMaskInterface
 
     public function contains(
         int $bitmask,
-        PermissionInterface ...$permission
+        string|PermissionInterface|BackedEnum ...$permission
     ): bool {
         try {
             $this->__invoke($bitmask, ...$permission);

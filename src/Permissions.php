@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Authorization;
 
+use BackedEnum;
 use Chevere\Authorization\Interfaces\PermissionInterface;
 use Chevere\Authorization\Interfaces\PermissionsInterface;
 use Chevere\DataStructure\Interfaces\VectorInterface;
@@ -28,7 +29,7 @@ final class Permissions implements PermissionsInterface
     private VectorInterface $items;
 
     public function __construct(
-        PermissionInterface ...$permission
+        string|PermissionInterface|BackedEnum ...$permission
     ) {
         $this->names = new Vector();
         $this->items = new Vector();
@@ -40,11 +41,11 @@ final class Permissions implements PermissionsInterface
         return $this->names->count();
     }
 
-    public function assert(PermissionInterface ...$permission): void
+    public function assert(string|PermissionInterface|BackedEnum ...$permission): void
     {
         $missing = [];
         foreach ($permission as $item) {
-            $value = $item->value();
+            $value = getPermission($item);
             if (! $this->names->contains($value)) {
                 $missing[] = $value;
             }
@@ -64,10 +65,10 @@ final class Permissions implements PermissionsInterface
         );
     }
 
-    public function contains(PermissionInterface ...$permission): bool
+    public function contains(string|PermissionInterface|BackedEnum ...$permission): bool
     {
         foreach ($permission as $item) {
-            $value = $item->value();
+            $value = getPermission($item);
             if (! $this->names->contains($value)) {
                 return false;
             }
@@ -89,10 +90,10 @@ final class Permissions implements PermissionsInterface
         return $new;
     }
 
-    private function pushPermission(PermissionInterface ...$permission): void
+    private function pushPermission(string|PermissionInterface|BackedEnum ...$permission): void
     {
         foreach ($permission as $item) {
-            $value = $item->value();
+            $value = getPermission($item);
             if ($this->names->contains($value)) {
                 continue;
             }

@@ -27,6 +27,6 @@ trait PermissionTrait
 
     public function value(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 }

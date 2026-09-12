@@ -23,8 +23,6 @@ use Iterator;
  */
 interface RolesInterface extends StringMappedInterface
 {
-    public function __invoke(PermissionInterface ...$permission): bool;
-
     public function mask(): int;
 
     /**

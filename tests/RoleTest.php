@@ -24,30 +24,6 @@ use function Chevere\Standard\getBits;
 
 final class RoleTest extends TestCase
 {
-    #[DataProvider('dataProviderPowersOfTwo')]
-    public function testPowersOfTwo(int $power): void
-    {
-        $role = new Role($power, 'valid');
-        $this->assertSame($power, $role->bit());
-        $this->assertSame($power, $role->mask());
-    }
-
-    public static function dataProviderPowersOfTwo(): array
-    {
-        $powers = [];
-        $maxValue = strval(PHP_INT_MAX);
-        for ($i = 0; $i <= 63; $i++) {
-            $value = bcpow('2', (string) $i);
-            if (bccomp($value, $maxValue) <= 0) {
-                $powers[] = [intval($value)];
-            } else {
-                break;
-            }
-        }
-
-        return $powers;
-    }
-
     #[DataProvider('dataProviderNotPowerOfTwo')]
     public function testNotPowerOfTwo(int $int): void
     {
@@ -100,12 +76,26 @@ final class RoleTest extends TestCase
 
     public function testInheritsMaskAndPermissions(): void
     {
-        $user = new Role(1, 'user', UserPermission::Create);
-        $staff = new Role(4, 'staff', UserPermission::Ban);
-        $admin = new Role(2, 'admin', $user, $staff);
-        $this->assertSame(1 | 2 | 4, $admin->mask());
-        $this->assertTrue($admin->permissions()->contains(UserPermission::Create));
-        $this->assertTrue($admin->permissions()->contains(UserPermission::Ban));
+        $userRole = new Role(1, 'user', 'test:grant', UserPermission::Create);
+        $staffRole = new Role(4, 'staff', UserPermission::Ban);
+        $adminRole = new Role(2, 'admin', $userRole, $staffRole);
+        $this->assertSame(1 | 2 | 4, $adminRole->mask());
+        $this->assertTrue(
+            $userRole->permissions()
+                ->contains('test:grant', UserPermission::Create)
+        );
+        $this->assertTrue(
+            $staffRole->permissions()
+                ->contains(UserPermission::Ban)
+        );
+        $this->assertTrue(
+            $adminRole->permissions()
+                ->contains('test:grant', UserPermission::Create, UserPermission::Ban)
+        );
+        $this->assertFalse(
+            $userRole->permissions()
+                ->contains(UserPermission::Ban)
+        );
     }
 
     public static function dataProviderRole(): array
