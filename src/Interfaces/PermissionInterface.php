@@ -15,7 +15,7 @@ namespace Chevere\Authorization\Interfaces;
 
 interface PermissionInterface
 {
-    public static function permits(): PermissionsInterface;
+    public static function permissions(): PermissionsInterface;
 
     public function value(): string;
 }

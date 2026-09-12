@@ -20,7 +20,7 @@ trait PermissionTrait
 {
     abstract public static function cases(): array;
 
-    public static function permits(): PermissionsInterface
+    public static function permissions(): PermissionsInterface
     {
         return new Permissions(...static::cases());
     }

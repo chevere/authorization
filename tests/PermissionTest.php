@@ -22,7 +22,7 @@ final class PermissionTest extends TestCase
     {
         $this->assertSame(
             UserPermission::cases(),
-            iterator_to_array(UserPermission::permits())
+            iterator_to_array(UserPermission::permissions())
         );
     }
 
