@@ -20,7 +20,6 @@ use Chevere\DataStructure\Map;
 use Chevere\DataStructure\Traits\MapTrait;
 use OutOfBoundsException;
 use OverflowException;
-use function Chevere\Message\message;
 
 final class Roles implements RolesInterface
 {
@@ -110,11 +109,11 @@ final class Roles implements RolesInterface
             );
 
             throw new OverflowException(
-                (string) message(
-                    'Role **%name%** has been previously taken by %caller%',
-                    name: $role->name(),
-                    caller: $conflict->caller()
-                        ->__toString(),
+                sprintf(
+                    'Role **%s** has been previously taken by %s',
+                    $role->name(),
+                    $conflict->caller()
+                        ->__toString()
                 )
             );
         }
@@ -124,12 +123,12 @@ final class Roles implements RolesInterface
             $conflict = $this->map->get($role->bit());
 
             throw new OverflowException(
-                (string) message(
-                    'Bit **%bit%** has been previously reserved by role `%role%` in %caller%',
-                    bit: strval($role->bit()),
-                    role: $conflict->name(),
-                    caller: $conflict->caller()
-                        ->__toString(),
+                sprintf(
+                    'Bit **%s** has been previously reserved by role `%s` in %s',
+                    strval($role->bit()),
+                    $conflict->name(),
+                    $conflict->caller()
+                        ->__toString()
                 )
             );
         } catch (OutOfBoundsException) {

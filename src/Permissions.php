@@ -20,7 +20,6 @@ use Chevere\DataStructure\Interfaces\VectorInterface;
 use Chevere\DataStructure\Vector;
 use Iterator;
 use LogicException;
-use function Chevere\Message\message;
 
 final class Permissions implements PermissionsInterface
 {
@@ -55,13 +54,7 @@ final class Permissions implements PermissionsInterface
         }
 
         throw new LogicException(
-            (string) message(
-                <<<PLAIN
-                Missing permission(s): %s%
-                PLAIN
-                ,
-                s: implode(', ', $missing)
-            )
+            sprintf('Missing permission(s): %s', implode(', ', $missing))
         );
     }
 
